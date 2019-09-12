@@ -1,38 +1,60 @@
+
+
 int sensorValue;
- // variable to calibrate low value
- int sensorLow = 1023;
- // variable to calibrate high value
- int sensorHigh = 0;
- // LED pin
- const int ledPin = 13;
+int sensorLow = 1023;
+int sensorHigh = 0;
+const int ledPin = 13;
+unsigned int pitch;
+
 void setup() {
- // Make the LED pin an output and turn it on
- pinMode(ledPin, OUTPUT);
- digitalWrite(ledPin, HIGH);
- // calibrate for the first five seconds after program runs
- while (millis() < 5000) {
- // save the maximum sensor value
- sensorValue = analogRead(A0);
- if (sensorValue > sensorHigh) {
- sensorHigh = sensorValue;
- }
- // save the minimum sensor value
- if (sensorValue < sensorLow) {
- sensorLow = sensorValue;
- }
- }
- //turn the LED off, signaling the end of the calibration
- digitalWrite(ledPin, LOW);
- }
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  pinMode(A1, INPUT);
+  digitalWrite(ledPin, HIGH);
+  Serial.println("Calculating max and min value ");
+
+
+ while(millis() < 5000){
+    sensorValue = analogRead(A1);
+    if (sensorValue > sensorHigh) {
+        sensorHigh = sensorValue;
+      }
+    if (sensorValue < sensorLow){
+        sensorLow= sensorValue;
+      } 
+
+  }
+
+  
+  Serial.print("The high Value is: ");
+  Serial.println(sensorHigh);
+
+  Serial.print("The low Value is: ");
+  Serial.println(sensorLow);
+ 
+   digitalWrite(ledPin, LOW);
+}
+
+
 void loop() {
- //read the input from A0 and store it in a variable
- sensorValue=analogRead(A0);
- // map the sensor values to a wide range of pitches
- int pitch=map(sensorValue, sensorLow, sensorHigh, 50, 4000);
- // play the tone for 20 ms on pin 8
- tone(8, pitch, 20);
- // wait for 10ms
- delay(10);
- Serial.print("The sensor Value is: ");
- Serial.print(sensorValue);
- }
+  sensorValue = analogRead(A1);
+  unsigned int pitch = map(sensorValue, sensorLow, sensorHigh, 50 ,1000);
+  //Serial.print("The tone is: ");
+  //Serial.println(pitch);
+    
+    
+    if(sensorValue <= sensorLow){
+      //Serial.println("I am not playing a tone");
+      Serial.print("NOT ALLOWED sensor value: "); 
+      Serial.println(sensorValue);
+      tone(8, 5, 50);
+      } else {
+        tone(8, pitch, 50);
+        Serial.print("sensor value: "); 
+        Serial.println(sensorValue);
+        }
+
+      delay(10);
+
+     
+}
