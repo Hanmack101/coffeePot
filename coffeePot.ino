@@ -43,7 +43,7 @@ void loop() {
   //Serial.println(pitch);
     
     
-    if(sensorValue <= sensorLow){
+    if(sensorValue <= sensorLow+100){
       //Serial.println("I am not playing a tone");
       Serial.print("NOT ALLOWED sensor value: "); 
       Serial.println(sensorValue);
